@@ -1,5 +1,5 @@
 # codepath-assignment2
-
+Time spent: ~ 10 hours
 - Static photo tiles on the initial screen
  - [x] Optional: Photo tiles move with scrolling
 - Sign In
