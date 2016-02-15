@@ -27,3 +27,19 @@ func convertValue(value: CGFloat, r1Min: CGFloat, r1Max: CGFloat, r2Min: CGFloat
     return value * ratio + r2Min - r1Min * ratio
 }
 
+struct Tile {
+    var xOffset, yOffset, scale, rotation:CGFloat;
+    var tileImage:UIImageView
+    
+    init(tileImage: UIImageView, xOffset:CGFloat, yOffset:CGFloat, scale:CGFloat, rotation:CGFloat
+        ) {
+            self.xOffset = xOffset
+            self.yOffset = yOffset
+            self.scale = scale
+            self.rotation = rotation
+            self.tileImage = tileImage
+    }
+    
+}
+
+

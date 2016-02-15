@@ -9,15 +9,13 @@
 import UIKit
 
 class IntroViewController: UIViewController, UIScrollViewDelegate{
-
+    
+    
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var yOffsets : [Float] = [-282, -260, -415, -408, -520, -500]
-    var xOffsets : [Float] = [-70, 55, 16, 95, -140, -100]
-    var scales : [CGFloat] = [1, 1.65, 1.7, 1.6, 1.65, 1.65]
-    var rotations : [CGFloat] = [-10, -10, 10, 10, 10, -10]
     let OFFSETMIN:CGFloat = 0
     let OFFSETMAX:CGFloat = 568
+    var tiles: [Tile] = []
     
     @IBOutlet weak var tile1: UIImageView!
     @IBOutlet weak var tile2: UIImageView!
@@ -25,14 +23,16 @@ class IntroViewController: UIViewController, UIScrollViewDelegate{
     @IBOutlet weak var tile4: UIImageView!
     @IBOutlet weak var tile5: UIImageView!
     @IBOutlet weak var tile6: UIImageView!
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.delegate = self
         scrollView.contentSize = CGSize(width: 320, height: 1136)
 
-        // Do any additional setup after loading the view.
+        initializeTileArray()
         transformTiles(CGFloat(scrollView.contentOffset.y));
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,32 +44,33 @@ class IntroViewController: UIViewController, UIScrollViewDelegate{
         transformTiles(CGFloat(scrollView.contentOffset.y));
     }
     
-    func transformTiles(offset: CGFloat){
-        //Could be more DRY
-        transformTile(offset, index: 0, tile: tile1)
-        transformTile(offset, index: 1, tile: tile2)
-        transformTile(offset, index: 2, tile: tile3)
-        transformTile(offset, index: 3, tile: tile4)
-        transformTile(offset, index: 4, tile: tile5)
-        transformTile(offset, index: 5, tile: tile6)
+    func initializeTileArray(){
+         tiles = [
+            Tile(tileImage: tile1, xOffset:-70, yOffset:-282, scale: 1, rotation:-10),
+            Tile(tileImage: tile2, xOffset: 55, yOffset:-260, scale: 1.65, rotation:-10),
+            Tile(tileImage: tile3, xOffset: 16, yOffset:-415, scale: 1.7, rotation:10),
+            Tile(tileImage: tile4, xOffset: 95, yOffset:-408, scale: 1.6, rotation:10),
+            Tile(tileImage: tile5, xOffset:-140, yOffset:-520, scale: 1.65, rotation:10),
+            Tile(tileImage: tile6, xOffset:-100, yOffset:-500, scale: 1.65, rotation:-10)
+        ]
     }
     
-    func transformTile(offset:CGFloat, index: Int, tile: UIImageView){
-        var xOffset = CGFloat(xOffsets[index])
-        var yOffset = CGFloat(yOffsets[index])
-
-        
-        var tx = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: xOffset, r2Max:0)
-        var ty = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: yOffset, r2Max: 0)
-
-        var scale = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: scales[index], r2Max: 1)
-        var rotation = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: rotations[index], r2Max: 0)
-        
-        tile.transform = CGAffineTransformMakeTranslation(tx, ty)
-        tile.transform = CGAffineTransformScale(tile.transform, scale, scale)
-        tile.transform = CGAffineTransformRotate(tile.transform, CGFloat(Double(rotation) * M_PI / 180))
-        
+    func transformTiles(offset: CGFloat){
+        //Could be more DRY
+        for tile in tiles {
+            var tx = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: tile.xOffset, r2Max:0)
+            var ty = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: tile.yOffset, r2Max: 0)
+            
+            var scale = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: tile.scale, r2Max: 1)
+            var rotation = convertValue(offset, r1Min: OFFSETMIN , r1Max: OFFSETMAX, r2Min: tile.rotation, r2Max: 0)
+            
+            tile.tileImage.transform = CGAffineTransformMakeTranslation(tx, ty)
+            tile.tileImage.transform = CGAffineTransformScale(tile.tileImage.transform, scale, scale)
+            tile.tileImage.transform = CGAffineTransformRotate(tile.tileImage.transform, CGFloat(Double(rotation) * M_PI / 180))
+            
+        }
     }
+    
     /*
     // MARK: - Navigation
 
